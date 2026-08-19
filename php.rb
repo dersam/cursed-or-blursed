@@ -3,7 +3,7 @@ class PHP
     @last = global_variables.dup
   end
 
-  def echo(*parts) = (print parts.join; print "\n"; @last = global_variables.dup) # echo "a", "b";
+  def echo(*parts) = (print parts.join; @last = global_variables.dup) # echo "a", "b";  (no newline, like PHP)
   def array(*items) = items                         # array(1, 2, 3)
   def isset(x) = !x.nil?                             # isset($x)
   def count(x) = x.size                              # count($x)
