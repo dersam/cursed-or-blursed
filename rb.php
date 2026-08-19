@@ -13,3 +13,5 @@ function greet($who) {
 
 echo greet("world");
 echo implode(" ", ["strlen(name) =", strlen($name)]);
+echo isset(null);
+?>

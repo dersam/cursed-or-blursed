@@ -3,7 +3,7 @@ class PHP
     @last = global_variables.dup
   end
 
-  def echo(*parts) = (print parts.join; @last = global_variables.dup) # echo "a", "b";
+  def echo(*parts) = (print parts.join; print "\n"; @last = global_variables.dup) # echo "a", "b";
   def array(*items) = items                         # array(1, 2, 3)
   def isset(x) = !x.nil?                             # isset($x)
   def count(x) = x.size                              # count($x)
@@ -32,25 +32,12 @@ class PHP
     end
   end
 
-  def run(&code); instance_exec(&code); end
+  # Read a .php source file, strip the <?php ... ?> tags, and eval the
+  # remaining Ruby/PHP body in this instance's context.
+  def run_file(path)
+    src = File.read(path).sub(/\A.*?<\?php/m, "").sub(/\?>\s*\z/, "")
+    instance_eval(src, path)
+  end
 end
 
-# ===== begin "PHP" =======
-
-PHP.new.run {
-  $name  = "Ada Lovelace";
-  $role  = "Engineer";
-  $langs = array("Ruby", "PHP", "Assembly");
-
-  echo implode(" ", ["Hello,", $name, "!"]);
-  echo implode(" ", ["Role: ", $role]);
-
-  function greet($who) {
-    return implode(" ", ["Sup, ", $who]);
-  }
-
-  echo greet("world");
-  echo implode(" ", ["strlen(name) =", strlen($name)]);
-}
-
-# ===== end "PHP" =======
+PHP.new.run_file("rb.php")
