@@ -12,6 +12,10 @@ module PHP
         code
           .sub(/\A.*?<\?php/m, "")
           .tap {|c| c.sub(/\?>\s*\z/, "")}
+
+          # Don't get too clever. The point is for this
+          # to be valid Ruby. If you're rewriting everything,
+          # it's just an interpreter.
       end
     end
   end
