@@ -6,20 +6,6 @@ module PHP
     end
   end
 
-  class Rewriter
-    class << self
-      def call(code)
-        code
-          .sub(/\A.*?<\?php/m, "")
-          .tap {|c| c.sub(/\?>\s*\z/, "")}
-
-          # Don't get too clever. The point is for this
-          # to be valid Ruby. If you're rewriting everything,
-          # it's just an interpreter.
-      end
-    end
-  end
-
   class Exec
     def initialize
       @last = global_variables.dup
@@ -56,10 +42,11 @@ module PHP
 
     def run_file(path)
       src = File.read(path)
-      instance_eval(Rewriter.call(src), path)
+      instance_eval(src, path)
     end
   end
 
   # Perform heinous nonsense
+  print "#"
   Exec.new.run_file("rb.php")
 end

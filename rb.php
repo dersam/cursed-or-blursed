@@ -1,4 +1,4 @@
-<?php
+#<?php
 
 $name  = "Ada Lovelace";
 $role  = "Engineer";
@@ -21,4 +21,4 @@ echo "\n";
 $x = null;
 echo isset($x) ? "set" : "not";
 echo "\n";
-?>
+
