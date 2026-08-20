@@ -1,5 +1,20 @@
 module PHP
 
+  refine String do
+    def method_missing(name, *args, &block)
+      concat(args.first)
+    end
+  end
+
+  class Rewriter
+    class << self
+      def call(code)
+        code
+          .sub(/\A.*?<\?php/m, "")
+          .tap {|c| c.sub(/\?>\s*\z/, "")}
+      end
+    end
+  end
 
   class Exec
     def initialize
@@ -35,11 +50,9 @@ module PHP
       end
     end
 
-    # Read a .php source file, strip the <?php ... ?> tags, and eval the
-    # remaining Ruby/PHP body in this instance's context.
     def run_file(path)
-      src = File.read(path).sub(/\A.*?<\?php/m, "").sub(/\?>\s*\z/, "")
-      instance_eval(src, path)
+      src = File.read(path)
+      instance_eval(Rewriter.call(src), path)
     end
   end
 
